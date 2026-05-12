@@ -1,15 +1,16 @@
 package org.example.simulator.services
 
 import org.example.domain.Faction
-import org.example.domain.Event
-import org.example.domain.Name
 import org.example.simulator.WorldState
 import org.example.simulator.engines.ProbabilityEngine.chanceForFactionToDeclareWar
+import org.example.simulator.services.EventService.startBattleEvent
 
 
-class FactionService {
+class FactionService(
+    val worldState: WorldState
+){
 
-    fun simulateFactions(worldState: WorldState) {
+    fun simulateFactions() {
         // Simulate faction growth, alliances, and conflicts
         for (i in worldState.factions.indices) {
             val faction = worldState.factions[i]
@@ -22,7 +23,7 @@ class FactionService {
                 if (enemy != null) {
                     // cost of war
                     updatedFaction = updatedFaction.decreaseWealth(75)
-                    startBattle(updatedFaction, enemy, worldState)
+                    startBattleEvent(updatedFaction, enemy, worldState)
                 }
             }
             worldState.factions[i] = updatedFaction
@@ -33,8 +34,4 @@ class FactionService {
         return allFactions.filter { it.id != faction.id }.randomOrNull()
     }
 
-    private fun startBattle(attacker: Faction, defender: Faction, worldState: WorldState) {
-        val battleName = Name("Battle of the ${defender.name.value} Land")
-        worldState.history.add(Event.Battle(worldState.currentYear, battleName, attacker, defender))
-    }
 }

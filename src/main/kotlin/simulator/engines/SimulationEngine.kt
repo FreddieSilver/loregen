@@ -2,21 +2,26 @@ package org.example.simulator.engines
 
 import org.example.simulator.WorldState
 import org.example.simulator.services.CharacterService
+import org.example.simulator.services.EventService
 import org.example.simulator.services.FactionService
+import org.example.simulator.services.RelationshipService
 
-object SimulationEngine {
-    private val characterService = CharacterService()
-    private val factionService = FactionService()
+class SimulationEngine(
+    val worldState: WorldState
+) {
+    private val relationshipService = RelationshipService(worldState)
+    private val characterService = CharacterService(worldState, relationshipService)
+    private val factionService = FactionService(worldState)
 
-    fun simulateYears(worldState: WorldState, years: Int) {
+    fun simulateYears(years: Int) {
         repeat(years) {
-            simulateYear(worldState)
+            simulateYear()
         }
     }
 
-    private fun simulateYear(worldState: WorldState) {
+    private fun simulateYear() {
         worldState.currentYear++
-        characterService.simulateCharacters(worldState)
-        factionService.simulateFactions(worldState)
+        characterService.simulateCharacters()
+        factionService.simulateFactions()
     }
 }

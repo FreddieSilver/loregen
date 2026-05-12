@@ -8,9 +8,11 @@ import org.example.domain.relationship.RelationshipType
 import org.example.simulator.WorldState
 import java.util.UUID
 
-class RelationshipService {
+class RelationshipService(
+    val worldState: WorldState
+) {
 
-    fun getSpouseId(character: Character, worldState: WorldState): UUID? {
+    fun getSpouseId(character: Character): UUID? {
         val marriage = worldState.relationships.find{
             it.type == RelationshipType.MARRIED
                     && (it.character1Id == character.id || it.character2Id == character.id)
@@ -18,12 +20,12 @@ class RelationshipService {
         return if (marriage.character1Id == character.id) marriage.character2Id else marriage.character1Id
     }
 
-    fun getSpouse(character: Character, worldState: WorldState): Character? {
-        val spouseId = getSpouseId(character, worldState) ?: return null
+    fun getSpouse(character: Character): Character? {
+        val spouseId = getSpouseId(character) ?: return null
         return worldState.characters.find { it.id == spouseId && it.isAlive }
     }
 
-    fun getSiblingIds(character: Character, worldState: WorldState): List<UUID> {
+    fun getSiblingIds(character: Character): List<UUID> {
         return worldState.relationships.filter {
             it.type == RelationshipType.SIBLING &&
                     (it.character1Id == character.id || it.character2Id == character.id)
@@ -32,34 +34,34 @@ class RelationshipService {
         }
     }
 
-    fun getSiblings(character: Character, worldState: WorldState): List<Character> {
-        val siblingIds = getSiblingIds(character, worldState)
+    fun getSiblings(character: Character): List<Character> {
+        val siblingIds = getSiblingIds(character)
         return worldState.characters.filter { siblingIds.contains(it.id) && it.isAlive }
     }
 
-    fun getParentIds(character: Character, worldState: WorldState): List<UUID> {
+    fun getParentIds(character: Character): List<UUID> {
         return worldState.relationships.filter {
             it.type == RelationshipType.PARENT_CHILD && it.character2Id == character.id
         }.map { it.character1Id }
     }
 
-    fun getParents(character: Character, worldState: WorldState): List<Character> {
-        val parentIds = getParentIds(character, worldState)
+    fun getParents(character: Character): List<Character> {
+        val parentIds = getParentIds(character)
         return worldState.characters.filter { parentIds.contains(it.id) && it.isAlive }
     }
 
-    fun getChildIds(character: Character, worldState: WorldState): List<UUID> {
+    fun getChildIds(character: Character): List<UUID> {
         return worldState.relationships.filter {
             it.type == RelationshipType.PARENT_CHILD && it.character1Id == character.id
         }.map { it.character2Id }
     }
 
-    fun getChildren(character: Character, worldState: WorldState): List<Character> {
-        val childIds = getChildIds(character, worldState)
+    fun getChildren(character: Character): List<Character> {
+        val childIds = getChildIds(character)
         return worldState.characters.filter { childIds.contains(it.id) && it.isAlive }
     }
 
-    fun marry(character1: Character, character2: Character, worldState: WorldState) {
+    fun marry(character1: Character, character2: Character) {
         val newMarriage = Relationship(
             character1Id = character1.id,
             character2Id = character2.id,
@@ -69,7 +71,7 @@ class RelationshipService {
         worldState.relationships.add(newMarriage)
     }
 
-    fun addParentChildAndSiblingsRelationships(parent: Character, child: Character, worldState: WorldState) {
+    fun addParentChildAndSiblingsRelationships(parent: Character, child: Character) {
         val newRelationship = Relationship(
             character1Id = parent.id,
             character2Id = child.id,
@@ -94,10 +96,10 @@ class RelationshipService {
 
     }
 
-    private fun getFamilyIds(character: Character, worldState: WorldState): Set<UUID> {
-        val siblingIds = getSiblingIds(character, worldState)
-        val parentIds = getParentIds(character, worldState)
-        val childIds = getChildIds(character, worldState)
+    private fun getFamilyIds(character: Character): Set<UUID> {
+        val siblingIds = getSiblingIds(character)
+        val parentIds = getParentIds(character)
+        val childIds = getChildIds(character)
 
         return  (siblingIds + parentIds + childIds).toSet()
     }
@@ -109,9 +111,8 @@ class RelationshipService {
         }
 
 
-
     fun findMate(female: Human, worldState: WorldState): Human? {
-        val familyIds = getFamilyIds(female, worldState)
+        val familyIds = getFamilyIds(female)
         val marriedIds = getMarriedIds(worldState)
 
         return worldState.characters
