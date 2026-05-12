@@ -1,12 +1,13 @@
-package org.example.simulator
+package org.loregen.simulator
 
-import org.example.domain.Faction
-import org.example.domain.Event
-import org.example.domain.Name
-import org.example.domain.characters.Character
-import org.example.domain.characters.Human
-import org.example.domain.characters.Sex
-import org.example.simulator.engines.NameGenerator.generateFullName
+import org.loregen.domain.Faction
+import org.loregen.domain.Event
+import org.loregen.domain.Name
+import org.loregen.domain.characters.Character
+import org.loregen.domain.characters.Human
+import org.loregen.domain.characters.Sex
+import org.loregen.simulator.engines.rng.NameGenerator.generateFullName
+import org.loregen.simulator.state.WorldState
 
 fun createFaction(name: String) =
     Faction(name = Name(name))

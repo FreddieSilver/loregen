@@ -1,14 +1,15 @@
-package org.example.simulator.services
+package org.loregen.simulator.services
 
-import org.example.domain.Faction
-import org.example.simulator.WorldState
-import org.example.simulator.engines.ProbabilityEngine.chanceForFactionToDeclareWar
-import org.example.simulator.services.EventService.startBattleEvent
+import org.loregen.domain.Faction
+import org.loregen.simulator.engines.rng.ProbabilityEngine.chanceForFactionToDeclareWar
+import org.loregen.simulator.state.WorldState
+import org.springframework.stereotype.Service
 
-
+@Service
 class FactionService(
-    val worldState: WorldState
-){
+    val worldState: WorldState,
+    private val eventService: EventService
+) {
 
     fun simulateFactions() {
         // Simulate faction growth, alliances, and conflicts
@@ -23,7 +24,7 @@ class FactionService(
                 if (enemy != null) {
                     // cost of war
                     updatedFaction = updatedFaction.decreaseWealth(75)
-                    startBattleEvent(updatedFaction, enemy, worldState)
+                    eventService.startBattleEvent(updatedFaction, enemy)
                 }
             }
             worldState.factions[i] = updatedFaction

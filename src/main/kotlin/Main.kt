@@ -1,18 +1,11 @@
-package org.example
+package org.loregen
 
-import org.example.simulator.WorldState
-import org.example.simulator.engines.SimulationEngine
-import org.example.simulator.seedWorld
-import org.example.writer.LoreWriter.writeLore
+import org.springframework.boot.autoconfigure.SpringBootApplication
+import org.springframework.boot.runApplication
 
+@SpringBootApplication
+class LoregenApplication
 
-fun main() {
-    val worldState = WorldState()
-    worldState.seedWorld()
-
-    val simulationEngine = SimulationEngine(worldState)
-    simulationEngine.simulateYears(300)
-
-    writeLore(worldState.history)
-
+fun main(args: Array<String>) {
+    runApplication<LoregenApplication>(*args)
 }

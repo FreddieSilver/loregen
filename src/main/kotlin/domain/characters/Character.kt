@@ -1,21 +1,20 @@
-package org.example.domain.characters
+package org.loregen.domain.characters
 
-import org.example.domain.Faction
+import org.loregen.domain.Faction
 import java.util.UUID
 
-interface Character {
-    val id: UUID
-    val name: CharacterName
-    val age: Int
-    val isAlive: Boolean
-    val faction: Faction?
+sealed class Character(
+    open val id: UUID,
+    open val name: CharacterName,
+    open val age: Int,
+    open val isAlive: Boolean,
+    open val faction: Faction?
+) {
+    abstract fun ageOneYear(): Character
 
-    fun ageOneYear(): Character
+    abstract fun die(): Character
 
-    fun die(): Character
+    abstract fun joinFaction(faction: Faction): Character
 
-    fun joinFaction(faction: Faction): Character
-
-    fun leaveFaction(): Character
-
+    abstract fun leaveFaction(): Character
 }

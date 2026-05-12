@@ -1,4 +1,4 @@
-package org.example.domain.relationship
+package org.loregen.domain.relationship
 
 enum class RelationshipType {
     MARRIED,

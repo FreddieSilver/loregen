@@ -1,7 +1,7 @@
-package org.example.simulator.engines
+package org.loregen.simulator.engines.rng
 
-import org.example.domain.Faction
-import org.example.domain.characters.Sex
+import org.loregen.domain.Faction
+import org.loregen.domain.characters.Sex
 import kotlin.random.Random
 
 object ProbabilityEngine {
@@ -44,10 +44,9 @@ object ProbabilityEngine {
     }
 
     fun chanceForFactionToDeclareWar(attackingFaction: Faction): Boolean {
-        val baseChance = 0.01
-        val newChance = baseChance + (attackingFaction.wealth / 10000.0)
-        return chance(newChance)
-
+        val baseChancePercent = 1.0
+        val wealthModifierPercent = attackingFaction.wealth / 10000.0
+        return chance(baseChancePercent + wealthModifierPercent)
     }
 
     fun chance(percent: Double): Boolean {

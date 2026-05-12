@@ -1,28 +1,28 @@
-package org.example.simulator.services
+package org.loregen.simulator.services
 
-import org.example.domain.characters.Character
-import org.example.domain.characters.Human
-import org.example.domain.characters.Sex
-import org.example.simulator.WorldState
-import org.example.simulator.characterBirth
-import org.example.simulator.engines.NameGenerator.generateFullName
-import org.example.simulator.engines.ProbabilityEngine.chance
-import org.example.simulator.engines.ProbabilityEngine.chanceForCharacterToFindLove
-import org.example.simulator.engines.ProbabilityEngine.chanceForHumanToHaveBaby
-import org.example.simulator.services.EventService.characterDeathEvent
-import org.example.simulator.services.EventService.characterMarriageEvent
-import org.example.simulator.services.EventService.charactersHavingBabyEvent
+import org.loregen.domain.characters.Character
+import org.loregen.domain.characters.Human
+import org.loregen.domain.characters.Sex
+import org.loregen.simulator.characterBirth
+import org.loregen.simulator.engines.rng.NameGenerator.generateFullName
+import org.loregen.simulator.engines.rng.ProbabilityEngine.chance
+import org.loregen.simulator.engines.rng.ProbabilityEngine.chanceForCharacterToFindLove
+import org.loregen.simulator.engines.rng.ProbabilityEngine.chanceForHumanToHaveBaby
+import org.loregen.simulator.state.WorldState
+import org.springframework.stereotype.Service
 
-
-// character rules live here
+// Character lifecycle rules live here.
+@Service
 class CharacterService(
     val worldState: WorldState,
-    val relationshipService: RelationshipService
+    val relationshipService: RelationshipService,
+    private val eventService: EventService
 ) {
 
     fun simulateCharacters() {
-        val newBirths = worldState.characters.indices.flatMap {
-            index -> simulateCharacter(index)
+        val currentPopulationSize = worldState.characters.size
+        val newBirths = (0 until currentPopulationSize).flatMap { index ->
+            simulateCharacter(index)
         }
 
         newBirths.forEach { worldState.characterBirth(it) }
@@ -40,7 +40,7 @@ class CharacterService(
 
     private fun dieIfOld(character: Character): Character {
         if (character is Human && character.willDieOfOldAge()) {
-            characterDeathEvent(character, "old age", worldState)
+            eventService.characterDeathEvent(character, "old age")
             return character.die()
         }
         return character
@@ -52,8 +52,7 @@ class CharacterService(
 
         val husband = resolveHusband(human) ?: return emptyList()
 
-        return if (chanceForHumanToHaveBaby(human.age)) reproduce(husband, human, worldState)
-        else emptyList()
+        return if (chanceForHumanToHaveBaby(human.age)) reproduce(husband, human) else emptyList()
     }
 
     private fun resolveHusband(female: Human): Human? {
@@ -62,24 +61,21 @@ class CharacterService(
 
         if (!chanceForCharacterToFindLove(female.age)) return null
 
-        val candidate = relationshipService.findMate(female, worldState) ?: return null
+        val candidate = relationshipService.findMate(female) ?: return null
         relationshipService.marry(female, candidate)
-        characterMarriageEvent(female, candidate, worldState)
+        eventService.characterMarriageEvent(female, candidate)
         return candidate
     }
 
-
-
-    private fun reproduce(father: Human, mother: Human, worldState: WorldState): List<Human> {
+    private fun reproduce(father: Human, mother: Human): List<Human> {
         val sex = if (chance(50.0)) Sex.MALE else Sex.FEMALE
         val child = Human(
             name = generateFullName(sex),
             sex = sex
         )
-        charactersHavingBabyEvent(father, mother, child, worldState)
-        relationshipService.addParentChildAndSiblingsRelationships(mother, child)
+        eventService.charactersHavingBabyEvent(father, mother, child)
+        relationshipService.addParentChildAndSiblingsRelationships(listOf(mother, father), child)
         return listOf(child)
     }
-
 
 }

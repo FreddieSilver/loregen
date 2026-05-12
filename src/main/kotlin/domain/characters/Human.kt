@@ -1,7 +1,7 @@
-package org.example.domain.characters
+package org.loregen.domain.characters
 
-import org.example.domain.Faction
-import org.example.simulator.engines.ProbabilityEngine.chanceForHumanToDieOfOldAge
+import org.loregen.domain.Faction
+import org.loregen.simulator.engines.rng.ProbabilityEngine.chanceForHumanToDieOfOldAge
 import java.util.UUID
 
 class Human(
@@ -11,31 +11,27 @@ class Human(
     val sex: Sex,
     override val isAlive: Boolean = true,
     override val faction: Faction? = null,
-): Character {
-    override fun ageOneYear(): Character {
+) : Character(id, name, age, isAlive, faction) {
+    override fun ageOneYear(): Human {
         return Human(id = id, name = name, age = age + 1, sex = sex, isAlive = isAlive, faction = faction)
     }
 
-    override fun die(): Character {
-        return Human(id = id, name = name, age = age,sex = sex, isAlive = false, faction = faction)
+    override fun die(): Human {
+        return Human(id = id, name = name, age = age, sex = sex, isAlive = false, faction = faction)
     }
 
-    override fun joinFaction(faction: Faction): Character {
-        return Human(id = id, name = name, age = age,sex = sex, isAlive = isAlive, faction = faction)
+    override fun joinFaction(faction: Faction): Human {
+        return Human(id = id, name = name, age = age, sex = sex, isAlive = isAlive, faction = faction)
     }
 
-    override fun leaveFaction(): Character {
-        return Human(id = id, name = name, age = age,sex = sex, isAlive = isAlive, faction = null)
+    override fun leaveFaction(): Human {
+        return Human(id = id, name = name, age = age, sex = sex, isAlive = isAlive, faction = null)
     }
 
     fun canReproduce(): Boolean = isAlive && age in 18..50
 
-    fun isMale(): Boolean = sex == Sex.MALE
-
     fun isFemale(): Boolean = sex == Sex.FEMALE
-
 
     fun willDieOfOldAge(): Boolean =
         chanceForHumanToDieOfOldAge(age = age, sex = sex)
-
 }

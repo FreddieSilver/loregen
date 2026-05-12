@@ -1,6 +1,6 @@
-package org.example.domain.characters
+package org.loregen.domain.characters
 
-import org.example.domain.Name
+import org.loregen.domain.Name
 
 data class CharacterName(
     val title: Name? = null,

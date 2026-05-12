@@ -1,4 +1,4 @@
-package org.example.domain.characters
+package org.loregen.domain.characters
 
 enum class Sex {
     MALE,

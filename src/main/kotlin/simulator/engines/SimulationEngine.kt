@@ -1,17 +1,16 @@
-package org.example.simulator.engines
+package org.loregen.simulator.engines
 
-import org.example.simulator.WorldState
-import org.example.simulator.services.CharacterService
-import org.example.simulator.services.EventService
-import org.example.simulator.services.FactionService
-import org.example.simulator.services.RelationshipService
+import org.loregen.simulator.services.CharacterService
+import org.loregen.simulator.services.FactionService
+import org.loregen.simulator.state.WorldState
+import org.springframework.stereotype.Service
 
+@Service
 class SimulationEngine(
-    val worldState: WorldState
+    val worldState: WorldState,
+    private val characterService: CharacterService,
+    private val factionService: FactionService
 ) {
-    private val relationshipService = RelationshipService(worldState)
-    private val characterService = CharacterService(worldState, relationshipService)
-    private val factionService = FactionService(worldState)
 
     fun simulateYears(years: Int) {
         repeat(years) {

@@ -1,8 +1,8 @@
-package org.example.simulator.engines
+package org.loregen.simulator.engines.rng
 
-import org.example.domain.Name
-import org.example.domain.characters.CharacterName
-import org.example.domain.characters.Sex
+import org.loregen.domain.Name
+import org.loregen.domain.characters.CharacterName
+import org.loregen.domain.characters.Sex
 
 object NameGenerator {
     private val maleNames = listOf("Dhruva", "Erick", "João", "Finn", "Próstata", "Brandon", "Eddard", "Robb", "Jon", "Tyrion")

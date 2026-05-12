@@ -1,4 +1,4 @@
-package org.example.domain
+package org.loregen.domain
 
 @JvmInline
 value class Name(

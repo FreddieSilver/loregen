@@ -1,6 +1,6 @@
-package org.example.domain
+package org.loregen.domain
 
-import org.example.domain.characters.Character
+import org.loregen.domain.characters.Character
 
 sealed class Event {
     abstract val year: Int
