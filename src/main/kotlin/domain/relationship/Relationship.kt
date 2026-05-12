@@ -7,6 +7,6 @@ data class Relationship(
     val character1Id: UUID,
     val character2Id: UUID,
     val type: RelationshipType,
-    val affectionLevel: Int = 50 // -100 to 100
-) {
-}
+    // -100 to 100
+    val affectionLevel: Int = 50,
+)

@@ -1,7 +1,7 @@
 package org.loregen.simulator
 
-import org.loregen.domain.Faction
 import org.loregen.domain.Event
+import org.loregen.domain.Faction
 import org.loregen.domain.Name
 import org.loregen.domain.characters.Character
 import org.loregen.domain.characters.Human
@@ -9,16 +9,16 @@ import org.loregen.domain.characters.Sex
 import org.loregen.simulator.engines.rng.NameGenerator.generateFullName
 import org.loregen.simulator.state.WorldState
 
-fun createFaction(name: String) =
-    Faction(name = Name(name))
+fun createFaction(name: String) = Faction(name = Name(name))
 
-fun createHuman(sex: Sex, faction: Faction? = null) =
-   Human(
-       name = generateFullName(sex),
-       sex = sex,
-       faction = faction
-   )
-
+fun createHuman(
+    sex: Sex,
+    faction: Faction? = null,
+) = Human(
+    name = generateFullName(sex),
+    sex = sex,
+    faction = faction,
+)
 
 fun WorldState.seedWorld() {
 //    val faction1 = createFaction("Red Clan")

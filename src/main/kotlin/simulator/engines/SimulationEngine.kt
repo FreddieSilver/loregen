@@ -9,9 +9,8 @@ import org.springframework.stereotype.Service
 class SimulationEngine(
     val worldState: WorldState,
     private val characterService: CharacterService,
-    private val factionService: FactionService
+    private val factionService: FactionService,
 ) {
-
     fun simulateYears(years: Int) {
         repeat(years) {
             simulateYear()

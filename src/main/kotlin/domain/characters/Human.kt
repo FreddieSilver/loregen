@@ -32,6 +32,5 @@ class Human(
 
     fun isFemale(): Boolean = sex == Sex.FEMALE
 
-    fun willDieOfOldAge(): Boolean =
-        chanceForHumanToDieOfOldAge(age = age, sex = sex)
+    fun willDieOfOldAge(): Boolean = chanceForHumanToDieOfOldAge(age = age, sex = sex)
 }

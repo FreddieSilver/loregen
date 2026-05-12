@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component
 class ApplicationRunner(
     private val worldState: WorldState,
     private val simulationEngine: SimulationEngine,
-    private val loreWriter: LoreWriter
+    private val loreWriter: LoreWriter,
 ) : CommandLineRunner {
     override fun run(vararg args: String?) {
         worldState.seedWorld()

@@ -5,5 +5,5 @@ enum class RelationshipType {
     PARENT_CHILD,
     SIBLING,
     RIVAL,
-    FRIEND
+    FRIEND,
 }

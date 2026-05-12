@@ -8,9 +8,8 @@ import org.springframework.stereotype.Service
 @Service
 class FactionService(
     val worldState: WorldState,
-    private val eventService: EventService
+    private val eventService: EventService,
 ) {
-
     fun simulateFactions() {
         // Simulate faction growth, alliances, and conflicts
         for (i in worldState.factions.indices) {
@@ -31,8 +30,10 @@ class FactionService(
         }
     }
 
-    private fun pickEnemy(faction: Faction, allFactions: List<Faction>): Faction? {
+    private fun pickEnemy(
+        faction: Faction,
+        allFactions: List<Faction>,
+    ): Faction? {
         return allFactions.filter { it.id != faction.id }.randomOrNull()
     }
-
 }

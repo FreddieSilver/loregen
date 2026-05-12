@@ -8,7 +8,7 @@ sealed class Character(
     open val name: CharacterName,
     open val age: Int,
     open val isAlive: Boolean,
-    open val faction: Faction?
+    open val faction: Faction?,
 ) {
     abstract fun ageOneYear(): Character
 

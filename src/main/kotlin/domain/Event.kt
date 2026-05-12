@@ -7,13 +7,13 @@ sealed class Event {
 
     data class Birth(
         override val year: Int,
-        val character: Character
+        val character: Character,
     ) : Event()
 
     data class Death(
         override val year: Int,
         val character: Character,
-        val cause: String
+        val cause: String,
     ) : Event()
 
     data class Battle(
@@ -26,13 +26,24 @@ sealed class Event {
     data class Marriage(
         override val year: Int,
         val partner1: Character,
-        val partner2: Character
+        val partner2: Character,
     ) : Event()
 
     data class HavingBaby(
         override val year: Int,
         val partner1: Character,
         val partner2: Character,
-        val child: Character
+        val child: Character,
     ) : Event()
+
+
+    fun toText(): String {
+        return when (this) {
+            is Birth -> "In the year ${year}, ${character.name.toText()} was born into the world."
+            is Death -> "In the year ${year}, tragedy struck as ${character.name.toText()} died from ${cause} at age ${character.age}."
+            is Battle -> "In the bloody year of ${year}, ${attacker.name.value} declared war upon ${defender.name.value}."
+            is HavingBaby -> "In the year ${year}, ${partner1.name.toText()} and ${partner2.name.toText()} welcomed their child, ${child.name.toText()}, into the world."
+            is Marriage -> "In the year ${year}, ${partner1.name.toText()} (${partner1.age} years old) and ${partner2.name.toText()} (${partner2.age} years old) were united in marriage."
+        }
+    }
 }

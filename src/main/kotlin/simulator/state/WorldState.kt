@@ -15,7 +15,7 @@ class WorldState(
     val characterState: CharacterState,
     val relationshipState: RelationshipState,
     val factionState: FactionState,
-    val eventLog: EventLog
+    val eventLog: EventLog,
 ) {
     var currentYear = 0
 

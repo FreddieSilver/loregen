@@ -11,14 +11,14 @@ import java.util.UUID
 
 @Service
 class RelationshipService(
-    val worldState: WorldState
+    val worldState: WorldState,
 ) {
-
     fun getSpouseId(character: Character): UUID? {
-        val marriage = worldState.relationships.find {
-            it.type == RelationshipType.MARRIED &&
-                (it.character1Id == character.id || it.character2Id == character.id)
-        } ?: return null
+        val marriage =
+            worldState.relationships.find {
+                it.type == RelationshipType.MARRIED &&
+                    (it.character1Id == character.id || it.character2Id == character.id)
+            } ?: return null
         return if (marriage.character1Id == character.id) marriage.character2Id else marriage.character1Id
     }
 
@@ -48,43 +48,57 @@ class RelationshipService(
         }.map { it.character2Id }
     }
 
-    fun marry(character1: Character, character2: Character) {
+    fun marry(
+        character1: Character,
+        character2: Character,
+    ) {
         if (getSpouse(character1) != null || getSpouse(character2) != null) return
         if (hasRelationship(character1.id, character2.id, RelationshipType.MARRIED)) return
 
-        val newMarriage = Relationship(
-            character1Id = character1.id,
-            character2Id = character2.id,
-            type = RelationshipType.MARRIED,
-            affectionLevel = 80
-        )
+        val newMarriage =
+            Relationship(
+                character1Id = character1.id,
+                character2Id = character2.id,
+                type = RelationshipType.MARRIED,
+                affectionLevel = 80,
+            )
         worldState.relationships.add(newMarriage)
     }
 
-    fun addParentChildAndSiblingsRelationships(parents: List<Character>, child: Character) {
+    fun addParentChildAndSiblingsRelationships(
+        parents: List<Character>,
+        child: Character,
+    ) {
         parents.forEach { parent ->
             if (!hasRelationship(parent.id, child.id, RelationshipType.PARENT_CHILD)) {
-                val parentChild = Relationship(
-                    character1Id = parent.id,
-                    character2Id = child.id,
-                    type = RelationshipType.PARENT_CHILD,
-                    affectionLevel = 80
-                )
+                val parentChild =
+                    Relationship(
+                        character1Id = parent.id,
+                        character2Id = child.id,
+                        type = RelationshipType.PARENT_CHILD,
+                        affectionLevel = 80,
+                    )
                 worldState.relationships.add(parentChild)
             }
 
-            val siblings = worldState.relationships
-                .filter { it.type == RelationshipType.PARENT_CHILD && it.character1Id == parent.id && it.character2Id != child.id }
-                .map { it.character2Id }
+            val siblings =
+                worldState.relationships
+                    .filter {
+                        it.type == RelationshipType.PARENT_CHILD &&
+                            it.character1Id == parent.id &&
+                            it.character2Id != child.id
+                    }
+                    .map { it.character2Id }
 
             siblings.forEach { siblingId ->
                 if (!hasRelationship(child.id, siblingId, RelationshipType.SIBLING)) {
-                    val siblingRelationship = Relationship(
-                        character1Id = child.id,
-                        character2Id = siblingId,
-                        type = RelationshipType.SIBLING,
-                        affectionLevel = 80
-                    )
+                    val siblingRelationship =
+                        Relationship(
+                            character1Id = child.id,
+                            character2Id = siblingId,
+                            type = RelationshipType.SIBLING,
+                            affectionLevel = 80,
+                        )
                     worldState.relationships.add(siblingRelationship)
                 }
             }
@@ -109,11 +123,17 @@ class RelationshipService(
             .toSet()
     }
 
-    private fun hasRelationship(character1Id: UUID, character2Id: UUID, type: RelationshipType): Boolean {
+    private fun hasRelationship(
+        character1Id: UUID,
+        character2Id: UUID,
+        type: RelationshipType,
+    ): Boolean {
         return worldState.relationships.any {
             it.type == type &&
-                ((it.character1Id == character1Id && it.character2Id == character2Id) ||
-                    (it.character1Id == character2Id && it.character2Id == character1Id))
+                (
+                    (it.character1Id == character1Id && it.character2Id == character2Id) ||
+                        (it.character1Id == character2Id && it.character2Id == character1Id)
+                )
         }
     }
 
@@ -131,5 +151,4 @@ class RelationshipService(
             .toList()
             .randomOrNull()
     }
-
 }

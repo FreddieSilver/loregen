@@ -10,23 +10,36 @@ import org.springframework.stereotype.Service
 
 @Service
 class EventService(
-    private val worldState: WorldState
+    private val worldState: WorldState,
 ) {
-
-    fun charactersHavingBabyEvent(father: Human, mother: Human, child: Human) {
+    fun charactersHavingBabyEvent(
+        father: Human,
+        mother: Human,
+        child: Human,
+    ) {
         worldState.history.add(Event.HavingBaby(worldState.currentYear, father, mother, child))
     }
 
-    fun characterDeathEvent(character: Character, cause: String) {
+    fun characterDeathEvent(
+        character: Character,
+        cause: String,
+    ) {
         worldState.history.add(Event.Death(worldState.currentYear, character, cause))
     }
 
-    fun characterMarriageEvent(partner1: Character, partner2: Character) {
+    fun characterMarriageEvent(
+        partner1: Character,
+        partner2: Character,
+    ) {
         worldState.history.add(Event.Marriage(worldState.currentYear, partner1, partner2))
     }
 
-    fun startBattleEvent(attacker: Faction, defender: Faction) {
+    fun startBattleEvent(
+        attacker: Faction,
+        defender: Faction,
+    ) {
         val battleName = Name("Battle of the ${defender.name.value} Land")
         worldState.history.add(Event.Battle(worldState.currentYear, battleName, attacker, defender))
     }
+
 }

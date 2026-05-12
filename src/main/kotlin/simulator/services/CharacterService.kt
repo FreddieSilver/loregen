@@ -16,14 +16,14 @@ import org.springframework.stereotype.Service
 class CharacterService(
     val worldState: WorldState,
     val relationshipService: RelationshipService,
-    private val eventService: EventService
+    private val eventService: EventService,
 ) {
-
     fun simulateCharacters() {
         val currentPopulationSize = worldState.characters.size
-        val newBirths = (0 until currentPopulationSize).flatMap { index ->
-            simulateCharacter(index)
-        }
+        val newBirths =
+            (0 until currentPopulationSize).flatMap { index ->
+                simulateCharacter(index)
+            }
 
         newBirths.forEach { worldState.characterBirth(it) }
     }
@@ -67,15 +67,18 @@ class CharacterService(
         return candidate
     }
 
-    private fun reproduce(father: Human, mother: Human): List<Human> {
+    private fun reproduce(
+        father: Human,
+        mother: Human,
+    ): List<Human> {
         val sex = if (chance(50.0)) Sex.MALE else Sex.FEMALE
-        val child = Human(
-            name = generateFullName(sex),
-            sex = sex
-        )
+        val child =
+            Human(
+                name = generateFullName(sex),
+                sex = sex,
+            )
         eventService.charactersHavingBabyEvent(father, mother, child)
         relationshipService.addParentChildAndSiblingsRelationships(listOf(mother, father), child)
         return listOf(child)
     }
-
 }
